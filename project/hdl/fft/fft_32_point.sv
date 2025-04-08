@@ -2,7 +2,7 @@
 
 
 module FFT_32_Point(
-    reg [7:0] signal_data [0:31];
+    reg [16:0] signal_data [0:31];
 );
 
 
