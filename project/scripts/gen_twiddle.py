@@ -24,17 +24,18 @@ def compute_bits_necessary(twiddles: list[tuple[int, int]]) -> int:
     return practical_bits
 
 def convert_binary(twiddle: int, twiddle_size: int) -> str:
-    if twiddle < 0:
-        twiddle = ~twiddle + 1
-    return f"{twiddle_size}'b{format(twiddle, f'0{twiddle_size}b')}\n"
+    # if twiddle < 0:
+    #     twiddle = ~twiddle + 1
+    mask = (1 << twiddle_size) - 1
+    return f"{twiddle_size}'b{format(twiddle & mask, f'0{twiddle_size}b')}\n"
 
 def format_twiddles(twiddles: list[tuple[int, int]], twiddle_size: int) -> tuple[str, str]:
     real_twiddle_array: str = ""
     imag_twiddle_array: str = ""
 
     for real, imag in twiddles:
-        real_twiddle_array += convert_binary(real, twiddle_size)
-        imag_twiddle_array += convert_binary(imag, twiddle_size)
+        real_twiddle_array += "\t\t" + convert_binary(real, twiddle_size)
+        imag_twiddle_array += "\t\t" + convert_binary(imag, twiddle_size)
     
     return real_twiddle_array, imag_twiddle_array
 
@@ -47,14 +48,12 @@ def input_handling() -> tuple[int, int]:
 
     return buffersize, accuracy_multiplier
 
-if __name__ == "__main__":
-    with open(f"{os.path.dirname(os.path.abspath(__file__))}/twiddle_template.sv") as f:
+def generate_twiddles_file(buffsize, multiplier):
+    with open(f"{os.path.dirname(os.path.abspath(__file__))}/templates/twiddle_template.sv", "r") as f:
         template = f.read()
 
     environment = jinja2.Environment()
     template_obj = environment.from_string(template)
-
-    buffsize, multiplier = (32, 1000)#input_handling()
 
     twiddles = compute_twiddle_factors(buffsize, multiplier)
     bits_per_twiddle = compute_bits_necessary(twiddles)
@@ -67,4 +66,5 @@ if __name__ == "__main__":
         imag_twiddles=imag
     )
 
-    print(out)
+    return out
+

@@ -8,12 +8,12 @@ module Twiddle_Storage (
 
 assign real_twiddle_register = 
     { 
-        {{real_twiddles}} 
+{{real_twiddles}} 
     };
 
 assign imag_twiddle_register = 
     { 
-        {{imag_twiddles}} 
+{{imag_twiddles}} 
     };
 
 endmodule

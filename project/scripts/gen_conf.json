@@ -1,0 +1,7 @@
+{
+    "twiddle_generation": {
+        "multiplier": 1000,
+        "buffsize": 32,
+        "twiddle_file_abspath":"/home/malinkyzubr/Desktop/270-AudioProject/project/hdl/fft/twiddle.sv"
+    }
+}
