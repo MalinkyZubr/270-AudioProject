@@ -14,28 +14,35 @@ def compute_twiddle_factors(buffsize: int, multiplier: int) -> list[tuple[int, i
 
     return twiddles
 
+def get_bits(max_value, roundup: bool=True) -> int:
+    min_bits = int(np.ceil(np.log2(max_value)) + 1) # plus 1 to account for signed
+    if roundup:
+        return 1 << (int(np.log2(min_bits)) + 1)
+
+    return min_bits
+
 def compute_bits_necessary(twiddles: list[tuple[int, int]]) -> int:
     real_values_max = max([x[0] for x in twiddles])
     imag_values_max = max([x[1] for x in twiddles])
 
-    min_bits = int(np.ceil(np.log2(max([real_values_max, imag_values_max]))) + 1) # plus 1 to account for signed
-    practical_bits = 1 << (int(np.log2(min_bits)) + 1)
+    bits = get_bits(max([real_values_max, imag_values_max])) # plus 1 to account for signed
 
-    return practical_bits
+    return bits
 
 def convert_binary(twiddle: int, twiddle_size: int) -> str:
     # if twiddle < 0:
     #     twiddle = ~twiddle + 1
     mask = (1 << twiddle_size) - 1
-    return f"{twiddle_size}'b{format(twiddle & mask, f'0{twiddle_size}b')}\n"
+    return f"{twiddle_size}'b{format(twiddle & mask, f'0{twiddle_size + 1}b')[1:]}"
 
 def format_twiddles(twiddles: list[tuple[int, int]], twiddle_size: int) -> tuple[str, str]:
     real_twiddle_array: str = ""
     imag_twiddle_array: str = ""
 
-    for real, imag in twiddles:
-        real_twiddle_array += "\t\t" + convert_binary(real, twiddle_size)
-        imag_twiddle_array += "\t\t" + convert_binary(imag, twiddle_size)
+    for index, value in enumerate(twiddles):
+        real, imag = value
+        real_twiddle_array += f"assign real_twiddle_register[{index}] = " + convert_binary(real, twiddle_size) + ";\n"
+        imag_twiddle_array += f"assign imag_twiddle_register[{index}] = " + convert_binary(imag, twiddle_size) + ";\n"
     
     return real_twiddle_array, imag_twiddle_array
 
@@ -60,10 +67,11 @@ def generate_twiddles_file(buffsize, multiplier):
     real, imag = format_twiddles(twiddles, bits_per_twiddle)
 
     out = template_obj.render(
-        twiddle_size=bits_per_twiddle, 
-        buffer_size=buffsize, 
+        twiddle_size=bits_per_twiddle - 1, 
+        buffer_size=buffsize - 1, 
         real_twiddles=real,
-        imag_twiddles=imag
+        imag_twiddles=imag,
+        address_size=get_bits(buffsize-1, roundup=False) - 2
     )
 
     return out
