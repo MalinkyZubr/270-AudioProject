@@ -1,0 +1,3 @@
+`define TWIDDLE_SIZE 16
+`define ADDRESS_SIZE 8
+`define BUFFER_SIZE 32
