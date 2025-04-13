@@ -41,8 +41,8 @@ def format_twiddles(twiddles: list[tuple[int, int]], twiddle_size: int) -> tuple
 
     for index, value in enumerate(twiddles):
         real, imag = value
-        real_twiddle_array += f"assign real_twiddle_register[{index}] = " + convert_binary(real, twiddle_size) + ";\n"
-        imag_twiddle_array += f"assign imag_twiddle_register[{index}] = " + convert_binary(imag, twiddle_size) + ";\n"
+        real_twiddle_array += f"assign real_twiddle_register[{index * twiddle_size + twiddle_size - 1}:{index * twiddle_size}] = " + convert_binary(real, twiddle_size) + ";\n"
+        imag_twiddle_array += f"assign imag_twiddle_register[{index * twiddle_size + twiddle_size - 1}:{index * twiddle_size}] = " + convert_binary(imag, twiddle_size) + ";\n"
     
     return real_twiddle_array, imag_twiddle_array
 
@@ -67,11 +67,10 @@ def generate_twiddles_file(buffsize, multiplier):
     real, imag = format_twiddles(twiddles, bits_per_twiddle)
 
     out = template_obj.render(
-        twiddle_size=bits_per_twiddle - 1, 
-        buffer_size=buffsize - 1, 
+        twiddle_size=bits_per_twiddle, 
+        buffer_size=buffsize, 
         real_twiddles=real,
         imag_twiddles=imag,
-        address_size=get_bits(buffsize-1, roundup=False) - 2
     )
 
     return out
