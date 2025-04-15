@@ -1,7 +1,8 @@
+// these can (and probably should) be overwritten in build process, these may not be ideal values by default
+
 `define TWIDDLE_SIZE 16
+`define NOFLOAT_MULTIPLIER 1000
 `define ADDRESS_SIZE 8
 `define BUFFER_SIZE 32
-`define INPUT_SAMPLE_SIZE 32
-`define MAPPED_INPUT_SIZE 8
-`define CALCULATION_SIZE (`INPUT_SAMPLE_SIZE + `MAPPED_INPUT_SIZE)
-`define MAPPED_OUTPUT_SIZE 3
+`define SAMPLE_SIZE 64
+`define MAPPED_OUTPUT_SIZE 8

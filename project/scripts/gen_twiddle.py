@@ -7,7 +7,7 @@ import os
 def compute_twiddle_factors(buffsize: int, multiplier: int) -> list[tuple[int, int]]: # index corresponds to index in the fft buffer
     twiddles = []
 
-    for index in range(buffsize):
+    for index in range(buffsize // 2):
         real_twiddle = np.cos(-2 * np.pi * index / buffsize)
         imaginary_twiddle = np.sin(-2 * np.pi * index / buffsize)
         twiddles.append((int(np.ceil(real_twiddle * multiplier)), int(np.ceil(imaginary_twiddle * 1000))))
@@ -41,8 +41,8 @@ def format_twiddles(twiddles: list[tuple[int, int]], twiddle_size: int) -> tuple
 
     for index, value in enumerate(twiddles):
         real, imag = value
-        real_twiddle_array += f"assign real_twiddle_register[{index * twiddle_size + twiddle_size - 1}:{index * twiddle_size}] = " + convert_binary(real, twiddle_size) + ";\n"
-        imag_twiddle_array += f"assign imag_twiddle_register[{index * twiddle_size + twiddle_size - 1}:{index * twiddle_size}] = " + convert_binary(imag, twiddle_size) + ";\n"
+        real_twiddle_array += f"assign real_twiddles[{index * twiddle_size + twiddle_size - 1}:{index * twiddle_size}] = " + convert_binary(real, twiddle_size) + ";\n"
+        imag_twiddle_array += f"assign imag_twiddles[{index * twiddle_size + twiddle_size - 1}:{index * twiddle_size}] = " + convert_binary(imag, twiddle_size) + ";\n"
     
     return real_twiddle_array, imag_twiddle_array
 
@@ -66,9 +66,10 @@ def generate_twiddles_file(buffsize, multiplier):
     bits_per_twiddle = compute_bits_necessary(twiddles)
     real, imag = format_twiddles(twiddles, bits_per_twiddle)
 
+
     out = template_obj.render(
         twiddle_size=bits_per_twiddle, 
-        buffer_size=buffsize, 
+        num_twiddles=buffsize // 2, 
         real_twiddles=real,
         imag_twiddles=imag,
     )
