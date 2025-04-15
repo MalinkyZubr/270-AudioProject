@@ -17,6 +17,9 @@ def configure_twiddles(config: dict) -> None:
     with open(twiddle_config["twiddle_file_abspath"], "w") as f:
         f.write(twiddle_file)
 
+def build_codebase():
+    pass
+
 
 if __name__ == "__main__":
     config = load_config()
