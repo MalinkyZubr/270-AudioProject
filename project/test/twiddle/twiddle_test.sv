@@ -5,30 +5,20 @@
 module Twiddle32Tester();
 
 
-logic clock = 0;
-logic reset = 0;
-logic[4:0] address = 5;
-logic signed [15:0] real_twiddle, imag_twiddle;
+logic signed[16 * 16 - 1:0] real_twiddle, imag_twiddle;
 
 
 Twiddle_Storage dut(
-    .clock(clock),
-    .reset(reset),
-    .address(address),
-    .real_twiddle(real_twiddle),
-    .imag_twiddle(imag_twiddle)
+    .real_twiddles(real_twiddle),
+    .imag_twiddles(imag_twiddle)
 );
 
 
 initial begin
-    #10 reset = 1;
-    #10 reset = 0;
-
-    address = 23;
-    #10 clock = 1;
-    #10 clock = 0;
-
-    $display ("\n:%d", real_twiddle);
+    for(int index = 0; index < 16; index++) begin
+        #10;
+        $display ("\n%0d + %0dj", $signed(real_twiddle[index * 16+:16]), $signed(imag_twiddle[index * 16+:16]));
+    end
 end
 
 endmodule

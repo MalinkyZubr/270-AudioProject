@@ -1,13 +1,23 @@
 `default_nettype none
 
+`ifndef fft_top
+`define fft_top
+
+// `include "./fft_n_point.sv"
+//`include "./magnitudes.sv"
+// `include "./twiddle.sv"
+`include "constants.sv"
+
+
 
 module FFT_Top #(
     parameter sample_size = SAMPLE_SIZE, // how big is each real time domain sample?
-    buffer_size = BUFFER_SIZE // how many samples per bitstream are there to process?
+    buffer_size = BUFFER_SIZE, // how many samples per bitstream are there to process?
+    twiddle_size = TWIDDLE_SIZE
 )
 (
     input logic signed[buffer_size * sample_size - 1:0] input_bitstream, // input time domain bitstream
-    output logic signed[buffer_size * sample_size - 1:0] output_bitstream, // magnitudes of all calculated frequency bins
+    output logic signed[buffer_size * sample_size - 1:0] output_bitstream // magnitudes of all calculated frequency bins
     // output bitstream is PARTIAL magnitude. The square root hasnt been applied
 );
 
@@ -23,7 +33,7 @@ module FFT_Top #(
     );
 
     FFT_N_Point #(.buffer_size(buffer_size),
-        .twiddle_size(TWIDDLE_SIZE),
+        .twiddle_size(twiddle_size),
         .num_twiddles(buffer_size / 2),
         .sample_size(sample_size)
     ) inst_n_fft (
@@ -46,3 +56,5 @@ module FFT_Top #(
     );
 
 endmodule
+
+`endif

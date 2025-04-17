@@ -1,5 +1,10 @@
 `default_nettype none
 
+`ifndef fft_calc
+`define fft_calc
+
+// `include "./twiddle.sv"
+`include "constants.sv"
 // should convert all registers to signed for FFT, considering signed twiddles
 
 module FFT_Calc #(
@@ -21,7 +26,7 @@ module FFT_Calc #(
     output logic signed[sample_size - 1:0] sum_term_imag,
 
     output logic signed[sample_size - 1:0] diff_term_real,
-    output logic signed[sample_size - 1:0] diff_term_imag,
+    output logic signed[sample_size - 1:0] diff_term_imag
 );
 
 logic signed[sample_size - 1:0] even_input_real_buff;
@@ -29,9 +34,6 @@ logic signed[sample_size - 1:0] odd_input_real_buff;
 
 logic signed[sample_size - 1:0] even_input_imag_buff;
 logic signed[sample_size - 1:0] odd_input_imag_buff;
-
-logic FFT_Unit_State state;
-logic FFT_Unit_State next_state;
 
 logic signed[sample_size - 1:0] q_odd_real;
 logic signed[sample_size - 1:0] q_odd_imag;
@@ -64,3 +66,5 @@ generate
 endgenerate
 
 endmodule
+
+`endif

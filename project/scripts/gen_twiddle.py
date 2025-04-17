@@ -10,8 +10,8 @@ def compute_twiddle_factors(buffsize: int, multiplier: int) -> list[tuple[int, i
     for index in range(buffsize // 2):
         real_twiddle = np.cos(-2 * np.pi * index / buffsize)
         imaginary_twiddle = np.sin(-2 * np.pi * index / buffsize)
-        twiddles.append((int(np.ceil(real_twiddle * multiplier)), int(np.ceil(imaginary_twiddle * 1000))))
-
+        twiddles.append((int(np.ceil(real_twiddle * multiplier)), int(np.ceil(imaginary_twiddle * multiplier))))
+        print(twiddles[index])
     return twiddles
 
 def get_bits(max_value, roundup: bool=True) -> int:

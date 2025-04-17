@@ -1,5 +1,11 @@
 `default_nettype none
-`include "../structs.sv"
+
+`ifndef fft_n_point
+`define fft_n_point
+
+// `include "./twiddle.sv"
+// `include "./fft_calc.sv"
+`include "constants.sv"
 
 // should convert all registers to signed for FFT, considering signed twiddles
 
@@ -7,7 +13,7 @@ module FFT_N_Point #(
     parameter twiddle_size = TWIDDLE_SIZE, 
     num_twiddles = BUFFER_SIZE / 2,
     buffer_size = 2,
-    sample_size = SAMPLE_SIZE,
+    sample_size = SAMPLE_SIZE
 )
 ( // this is the base case
     input logic signed[buffer_size * sample_size - 1:0] input_real,
@@ -16,14 +22,10 @@ module FFT_N_Point #(
     output logic signed[buffer_size * sample_size - 1:0] output_imag,
 
     input logic signed[twiddle_size * num_twiddles - 1:0] twiddles_real,
-    input logic signed[twiddle_size * num_twiddles - 1:0] twiddles_imag,
+    input logic signed[twiddle_size * num_twiddles - 1:0] twiddles_imag
 );
  // standardize for multi radix later
 genvar loop_index;
-genvar lower_calc_index;
-genvar upper_calc_index;
-genvar lower_twiddle_index;
-genvar upper_twiddle_index;
 
 logic signed[((buffer_size * sample_size) / 2) - 1] even_buffer;
 logic signed[((buffer_size * sample_size) / 2) - 1] odd_buffer;
@@ -38,11 +40,12 @@ logic signed[buffer_size * sample_size - 1:0] output_real_buff;
 logic signed[buffer_size * sample_size - 1:0] output_imag_buff;
 
 generate
-    if(buffer_size < 2) begin
-        $error("Illegal buffer size. %d point fft must be of at least size 2 to work properly (radix 2)", buffer_size);
+    if((buffer_size & (buffer_size - 1)) != 0 || buffer_size < 2) begin
+        initial begin
+            $fatal("Buffsize error");
+        end
     end
-
-    for(loop_index = 0; loop_index < buffer_size; loop_index += 2) begin
+    for(loop_index = 0; loop_index < buffer_size; loop_index = loop_index + 2) begin
         assign even_buffer[((loop_index / 2) * sample_size) + sample_size - 1 : (loop_index / 2) * sample_size] = 
             input_real[(loop_index * sample_size) + sample_size - 1 : loop_index * sample_size];
 
@@ -50,7 +53,7 @@ generate
             input_real[((loop_index + 1) * sample_size) + sample_size - 1 : (loop_index + 1) * sample_size];
     end
 
-    if(buffer_size == 2) {
+    if(buffer_size == 2) begin
         FFT_Calc #(.twiddle_size(twiddle_size),
             .sample_size(sample_size),
             .is_base_case(1'b1))
@@ -66,15 +69,15 @@ generate
             .sum_term_real(output_real_buff[sample_size - 1:0]),
             .diff_term_real(output_real_buff[(2 * sample_size) - 1:sample_size]),
             .sum_term_imag(output_imag_buff[sample_size - 1:0]),
-            .diff_term_imag(output_imag_buff[(2 * sample_size) - 1:sample_size]),
+            .diff_term_imag(output_imag_buff[(2 * sample_size) - 1:sample_size])
         );
-    }
+    end
 
-    else begin // stnadardize later for different radicies
+    else if ((buffer_size & (buffer_size - 1)) == 0 && buffer_size > 2) begin // stnadardize later for different radicies
         FFT_N_Point #(.buffer_size(buffer_size / 2), 
-            .twiddle_size(TWIDDLE_SIZE), 
+            .twiddle_size(twiddle_size), 
             .num_twiddles(num_twiddles), 
-            .sample_size(SAMPLE_SIZE)) 
+            .sample_size(sample_size)) 
             inst_even_child (
                 .input_real(even_buffer),
                 .output_real(even_fft_real),
@@ -85,9 +88,9 @@ generate
             );
 
         FFT_N_Point #(.buffer_size(buffer_size / 2), 
-            .twiddle_size(TWIDDLE_SIZE), 
+            .twiddle_size(twiddle_size), 
             .num_twiddles(num_twiddles), 
-            .sample_size(SAMPLE_SIZE)) 
+            .sample_size(sample_size)) 
             inst_odd_child (
                 .input_real(odd_buffer),
                 .output_real(odd_fft_real),
@@ -97,13 +100,13 @@ generate
                 .twiddles_imag(twiddles_imag)
             );
 
-        for(loop_index = 0; loop_index < buffer_size / 2; loop_index++) begin
-            upper_calc_index = (sample_size * loop_index) + sample_size - 1;
-            lower_calc_index = sample_size * loop_index;
-            lower_twiddle_index = (twiddle_size * loop_index) + twiddle_size - 1; // caalculation size computation should be done taking into account twiddle size as well
-            upper_twiddle_index = twiddle_size * loop_index;
+        for(loop_index = 0; loop_index < buffer_size / 2; loop_index = loop_index + 1) begin
+            localparam int upper_calc_index = (sample_size * loop_index) + sample_size - 1;
+            localparam int lower_calc_index = sample_size * loop_index;
+            localparam int lower_twiddle_index = (twiddle_size * loop_index) + twiddle_size - 1; // caalculation size computation should be done taking into account twiddle size as well
+            localparam int upper_twiddle_index = twiddle_size * loop_index;
 
-            FFT_Calc #(.twiddle_size(TWIDDLE_SIZE),
+            FFT_Calc #(.twiddle_size(twiddle_size),
                 .sample_size(sample_size),
                 .is_base_case(1'b0))
             instn_point_calc (
@@ -118,10 +121,12 @@ generate
                 .sum_term_real(output_real_buff[upper_calc_index:lower_calc_index]),
                 .sum_term_imag(output_imag_buff[upper_calc_index:lower_calc_index]),
                 .diff_term_real(output_real_buff[upper_calc_index + (buffer_size / 2):lower_calc_index + (buffer_size / 2)]),
-                .diff_term_imag(output_imag_buff[upper_calc_index + (buffer_size / 2):lower_calc_index + (buffer_size / 2)]),
+                .diff_term_imag(output_imag_buff[upper_calc_index + (buffer_size / 2):lower_calc_index + (buffer_size / 2)])
             );
         end
     end
 endgenerate
 
 endmodule
+
+`endif
