@@ -10,11 +10,11 @@ def load_config() -> dict:
 
     return config_dict
 
-def configure_twiddles(config: dict) -> None:
+def configure_twiddles(config: dict, buffsize) -> None:
     twiddle_config = config["twiddle_generation"]
-    twiddle_file = generate_twiddles_file(twiddle_config["buffsize"], twiddle_config["multiplier"])
+    twiddle_file = generate_twiddles_file(buffsize, twiddle_config["multiplier"])
 
-    with open(twiddle_config["twiddle_file_abspath"], "w") as f:
+    with open(twiddle_config["twiddle_file_abspath"] + twiddle_config["twiddle_name_prefix"] + str(buffsize) +".sv", "w") as f:
         f.write(twiddle_file)
 
 def build_codebase():
@@ -23,4 +23,9 @@ def build_codebase():
 
 if __name__ == "__main__":
     config = load_config()
-    configure_twiddles(config)
+
+    buffsize = config["twiddle_generation"]["buffsize"]
+
+    while buffsize >= 2:
+        configure_twiddles(config, buffsize)
+        buffsize //= 2

@@ -2,7 +2,8 @@
     "twiddle_generation": {
         "multiplier": 100,
         "buffsize": 32,
-        "twiddle_file_abspath":"/home/malinkyzubr/Desktop/270-AudioProject/project/hdl/fft/twiddle.sv"
+        "twiddle_file_abspath":"/home/malinkyzubr/Desktop/270-AudioProject/project/hdl/fft/twiddle/",
+        "twiddle_name_prefix":"twiddle_bs_"
     },
     "sample_size":64
 }
