@@ -1,0 +1,40 @@
+import math
+
+NUM_NOTES = 12
+NUM_BINS = 16
+BASE_FREQ = 131 # C3
+TOP_FREQ = 988 # B5
+
+freq_range = []
+log_step = math.log2(TOP_FREQ / BASE_FREQ) / (NUM_BINS - 1)
+for i in range(NUM_BINS):
+    freq = BASE_FREQ * (2 ** (i * log_step))
+    freq_range.append(freq)
+
+# C=0, C#=1, ..., B=11
+def freq_to_note_number(freq):
+    midi_num = round(69 + 12 * math.log2(freq / 440.0))
+    return midi_num % 12
+
+note_numbers = [freq_to_note_number(f) for f in freq_range]
+
+with open("note_lookup.sv", "w") as f:
+    f.write("module note_lookup(\n")
+    f.write("  input [3:0] bin,\n")
+    f.write("  output reg [3:0] note\n")
+    f.write(");\n\n")
+    f.write("  always @(*) begin\n")
+    f.write("    case(bin)\n")
+
+    for i, n in enumerate(note_numbers):
+        f.write(f"      4'd{i}: note = 4'd{n}; // Bin {i}, Note {n}\n")
+
+    f.write("      default: note = 4'd0;\n")
+    f.write("    endcase\n")
+    f.write("  end\n")
+    f.write("endmodule\n")
+
+print("Bin mappings (log-scaled around C3–B5):")
+for i, f in enumerate(freq_range):
+    note = freq_to_note_number(f)
+    print(f"Bin {i}: {f:.2f} Hz → Note {note}")
