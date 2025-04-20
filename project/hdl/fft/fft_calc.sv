@@ -1,16 +1,11 @@
 `default_nettype none
 
-`ifndef fft_calc
-`define fft_calc
-
-// `include "./twiddle.sv"
-`include "constants.sv"
-// should convert all registers to signed for FFT, considering signed twiddles
 
 module FFT_Calc #(
-    parameter twiddle_size = TWIDDLE_SIZE, 
-    sample_size = SAMPLE_SIZE,
-    is_base_case = 1'b1
+    parameter twiddle_size = 16, 
+    sample_size = 32,
+    is_base_case = 1'b1,
+    no_float_mult = 1000
 )
 ( // this is the base case
     input logic signed[sample_size - 1:0] even_input_real,
@@ -39,11 +34,11 @@ logic signed[sample_size - 1:0] q_odd_real;
 logic signed[sample_size - 1:0] q_odd_imag;
 
 
-assign even_input_real_buff = even_input_real * NOFLOAT_MULTIPLIER;
-assign even_input_imag_buff = even_input_imag * NOFLOAT_MULTIPLIER;
+assign even_input_real_buff = even_input_real * no_float_mult;
+assign even_input_imag_buff = even_input_imag * no_float_mult;
     
-assign odd_input_imag_buff = odd_input_imag;
-assign odd_input_real_buff = odd_input_real;
+assign odd_input_imag_buff = odd_input_imag; // why not multiplied by scaling factor?
+assign odd_input_real_buff = odd_input_real; // because its already applied by the twiddle
 
 assign q_odd_real = (odd_input_real_buff * twiddle_real) - (odd_input_imag_buff * twiddle_imag);
 assign q_odd_imag = (odd_input_real_buff * twiddle_imag) + (odd_input_imag_buff * twiddle_real);
@@ -57,14 +52,12 @@ generate
         assign diff_term_imag = even_input_imag_buff - q_odd_imag;
     end
     else begin
-        assign sum_term_real = (even_input_real_buff + q_odd_real) / NOFLOAT_MULTIPLIER;
-        assign sum_term_imag = (even_input_imag_buff + q_odd_imag) / NOFLOAT_MULTIPLIER;
+        assign sum_term_real = (even_input_real_buff + q_odd_real) / no_float_mult;
+        assign sum_term_imag = (even_input_imag_buff + q_odd_imag) / no_float_mult;
 
-        assign diff_term_real = (even_input_real_buff - q_odd_real) / NOFLOAT_MULTIPLIER;
-        assign diff_term_imag = (even_input_imag_buff - q_odd_imag) / NOFLOAT_MULTIPLIER;
+        assign diff_term_real = (even_input_real_buff - q_odd_real) / no_float_mult;
+        assign diff_term_imag = (even_input_imag_buff - q_odd_imag) / no_float_mult;
     end
 endgenerate
 
 endmodule
-
-`endif

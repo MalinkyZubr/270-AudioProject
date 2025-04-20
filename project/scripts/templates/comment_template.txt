@@ -1,0 +1,28 @@
+//-----------------------------------------------------------------------------
+//  File       : <module_name>.sv
+//  Author     : <Your Name>
+//  Created    : <YYYY-MM-DD>
+//  Description: 
+//      <Short summary of what this module does>
+//      (e.g., Computes FFT magnitudes based on real and imaginary input data)
+//
+//  Parameters:
+//      - sample_size  : <Description, e.g., Bit width of each sample>
+//      - buffer_size  : <Description, e.g., Number of samples in buffer>
+//
+//  Ports:
+//      Inputs:
+//          - <signal_name> : <Description>
+//      Outputs:
+//          - <signal_name> : <Description>
+//
+//  Notes:
+//      - <Optional: Any special assumptions, warnings, or info>
+//      - <Optional: Tool-specific settings, e.g., synthesis or sim notes>
+//
+//  Revision History:
+//      Date        Author        Description
+//      ----------  ------------  ---------------------------------------------
+//      <YYYY-MM-DD> <Your Name>  Initial version
+//
+//-----------------------------------------------------------------------------

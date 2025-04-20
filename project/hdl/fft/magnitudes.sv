@@ -1,14 +1,10 @@
 `default_nettype none
 
-`ifndef magnitudes
-`define magnitudes
-
-//`include "../constants.sv"
 
 
 module Partial_Magnitude_Computer #(
-    parameter sample_size = SAMPLE_SIZE,
-    buffer_size = BUFFER_SIZE
+    parameter sample_size = 32,
+    buffer_size = 32
 )
 (
     input logic signed[buffer_size * sample_size - 1:0] input_real,
@@ -31,5 +27,3 @@ module Partial_Magnitude_Computer #(
     endgenerate
 
 endmodule
-
-`endif
