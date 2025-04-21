@@ -21,15 +21,13 @@ void send_samples_to_fft(uint16_t *samples) {
     gpio_put(SPI_CS, 0);
     
     for (int i = 0; i < 32; i++) {
-        uint32_t value = ((uint32_t)samples[i]) << 20;
+        uint16_t value = samples[i];  // 16-bit sample
         
-        uint8_t bytes[4];
-        bytes[0] = (value >> 24) & 0xFF;
-        bytes[1] = (value >> 16) & 0xFF;
-        bytes[2] = (value >> 8) & 0xFF;
-        bytes[3] = value & 0xFF;
+        uint8_t bytes[2];  // 2 bytes for 16-bit data
+        bytes[0] = (value >> 8) & 0xFF;  // High byte
+        bytes[1] = value & 0xFF;         // Low byte
         
-        spi_write_blocking(spi0, bytes, 4);
+        spi_write_blocking(spi0, bytes, 2);  // Send 2 bytes instead of 4
     }
     
     gpio_put(SPI_CS, 1);
