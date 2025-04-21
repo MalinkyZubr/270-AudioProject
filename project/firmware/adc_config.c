@@ -1,7 +1,7 @@
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
 
-#define SAMPLE_RATE 1024 // Hz
+#define SAMPLE_RATE 32000 // Hz
 #define NUM_SAMPLES 32
 #define ADC_PIN 26
 
