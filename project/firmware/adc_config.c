@@ -1,13 +1,13 @@
 #include "pico/stdlib.h"
 #include "hardware/adc.h"
 
-#define SAMPLE_RATE 8000 // Hz
+#define SAMPLE_RATE 1024 // Hz
 #define NUM_SAMPLES 32
 #define ADC_PIN 26
 
 uint16_t audio_samples[NUM_SAMPLES];
 
-void setup() {
+void adc_setup() {
     adc_init();
     adc_gpio_init(ADC_PIN);
     adc_select_input(0); // ADC0
