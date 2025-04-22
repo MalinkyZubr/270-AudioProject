@@ -1,6 +1,5 @@
 module FFT_Butterfly #(
     parameter twiddle_size = 16, 
-    num_twiddles = 16,
     buffer_size = 32,
     sample_size = 32,
     no_float_mult = 1000
@@ -12,8 +11,8 @@ module FFT_Butterfly #(
     input logic signed[(buffer_size * sample_size / 2) - 1:0] odd_fft_real,
     input logic signed[(buffer_size * sample_size / 2) - 1:0] odd_fft_imag,
 
-    input logic signed[twiddle_size * num_twiddles - 1:0] twiddles_real,
-    input logic signed[twiddle_size * num_twiddles - 1:0] twiddles_imag,
+    input logic signed[(twiddle_size * buffer_size / 2) - 1:0] twiddles_real,
+    input logic signed[(twiddle_size * buffer_size / 2) - 1:0] twiddles_imag,
 
     output logic signed[buffer_size * sample_size - 1:0] output_real,
     output logic signed[buffer_size * sample_size - 1:0] output_imag
@@ -43,8 +42,9 @@ generate
         assign twiddle_calc_imag = twiddles_imag[loop_index * twiddle_size+:twiddle_size];
 
         assign even_fft_real_in = even_fft_real[loop_index * sample_size+:sample_size];
-        assign even_fft_imag_in = even_fft_imag[loop_index * sample_size+:sample_size];
         assign odd_fft_real_in = odd_fft_real[loop_index * sample_size+:sample_size];
+
+        assign even_fft_imag_in = even_fft_imag[loop_index * sample_size+:sample_size];
         assign odd_fft_imag_in = odd_fft_imag[loop_index * sample_size+:sample_size];
 
         FFT_Calc #(.twiddle_size(twiddle_size),
@@ -67,9 +67,10 @@ generate
 
         always_comb begin
             output_real_buff[loop_index * sample_size+:sample_size] = sum_term_real_out;
+            output_real_buff[(((loop_index * sample_size) + (buffer_size * sample_size / 2)))+:sample_size] = diff_term_real_out;
+
             output_imag_buff[loop_index * sample_size+:sample_size] = sum_term_imag_out;
-            output_real_buff[((loop_index * sample_size) + (buffer_size / 2))+:sample_size] = diff_term_real_out;
-            output_imag_buff[((loop_index * sample_size) + (buffer_size / 2))+:sample_size] = diff_term_imag_out;
+            output_imag_buff[(((loop_index * sample_size) + (buffer_size * sample_size / 2)))+:sample_size] = diff_term_imag_out;
         end
     end
 endgenerate

@@ -25,7 +25,7 @@ initial begin
     $display("FFT TESTS\n");
     
     for(int i = 0; i < 32; i = i + 1) begin
-        input_bitstream[i * 32 +: 32] = 1000 * $sin(i);
+        input_bitstream[i * 32 +: 32] = 10 * $sin(i);
     end
 
     #10;

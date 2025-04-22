@@ -29,8 +29,11 @@ logic signed[sample_size - 1:0] sum_term_imag_nobase;
 logic signed[sample_size - 1:0] diff_term_real_nobase;
 logic signed[sample_size - 1:0] diff_term_imag_nobase;
 
-assign twiddle_real = 5;
-assign twiddle_imag = 7;
+Twiddle_Coordinator #(.twiddle_size(twiddle_size), .buffer_size(2)) coordinator
+(
+    .real_twiddles(twiddle_real),
+    .imag_twiddles(twiddle_imag)
+);
 
 FFT_Calc #(.sample_size(32), .twiddle_size(16), .no_float_mult(1000))fft(
     .even_input_real(even_input_real),
@@ -79,7 +82,7 @@ initial begin
     odd_input_imag = 25;
     $display("CALC TESTS\n");
     #10;
-    $display("low_index: %0d + %0di, high_index: %0d + %0di\n", sum_term_real, sum_term_imag, diff_term_real, diff_term_imag);
+    $display("low_index: %0d + %0di, high_index: %0d + %0di, Twiddle: %0d + %0dj\n", sum_term_real, sum_term_imag, diff_term_real, diff_term_imag, twiddle_real, twiddle_imag);
     #10;
     even_input_real = 10000;
     even_input_imag = 15000;

@@ -9,9 +9,15 @@ def compute_twiddle_factors(buffsize: int, multiplier: int) -> list[tuple[int, i
 
     for index in range(buffsize // 2):
         real_twiddle = np.cos(-2 * np.pi * index / buffsize)
+        if np.abs(real_twiddle) < (1 / multiplier):
+            real_twiddle = 0
+
         imaginary_twiddle = np.sin(-2 * np.pi * index / buffsize)
+        if np.abs(imaginary_twiddle) < (1 / multiplier):
+            imaginary_twiddle = 0
+
         twiddles.append((int(np.ceil(real_twiddle * multiplier)), int(np.ceil(imaginary_twiddle * multiplier))))
-        print(twiddles[index])
+        #print(twiddles[index])
     return twiddles
 
 def get_bits(max_value, roundup: bool=True) -> int:
@@ -72,7 +78,33 @@ def generate_twiddles_file(buffsize, multiplier):
         num_twiddles=buffsize // 2, 
         real_twiddles=real,
         imag_twiddles=imag,
+        suffix = buffsize
+    )
+
+    return out, bits_per_twiddle
+
+def generate_coordinator_lut(buffsize: int):
+    suffix = 2
+    lut_string = ""
+
+    while suffix <= buffsize:
+        lut_string += f"\t\t{suffix} : Twiddle_Storage_{suffix} twiddler (.real_twiddles(real_twiddles), .imag_twiddles(imag_twiddles));\n"
+        suffix *= 2
+
+    return lut_string
+
+def generate_coordinator_file(buffsize: int, bits_per_twiddle: int):
+    with open(f"{os.path.dirname(os.path.abspath(__file__))}/templates/twiddle_coordinator_template.sv", "r") as f:
+        template = f.read()
+
+    environment = jinja2.Environment()
+    template_obj = environment.from_string(template)
+
+    lut = generate_coordinator_lut(buffsize)
+
+    out = template_obj.render(
+        twiddle_lut=lut,
+        twiddle_size=bits_per_twiddle
     )
 
     return out
-

@@ -21,7 +21,7 @@
 //
 //-----------------------------------------------------------------------------
 module Twiddle_Coordinator #(
-    parameter twiddle_size = {{ twiddle_size }},
+    parameter twiddle_size = 16,
     buffer_size = 32
 ) (
     output logic signed[(twiddle_size * buffer_size / 2) - 1:0] real_twiddles,
@@ -30,7 +30,12 @@ module Twiddle_Coordinator #(
 
 generate
     case(buffer_size)
-{{twiddle_lut}}
+		2 : Twiddle_Storage_2 twiddler (.real_twiddles(real_twiddles), .imag_twiddles(imag_twiddles));
+		4 : Twiddle_Storage_4 twiddler (.real_twiddles(real_twiddles), .imag_twiddles(imag_twiddles));
+		8 : Twiddle_Storage_8 twiddler (.real_twiddles(real_twiddles), .imag_twiddles(imag_twiddles));
+		16 : Twiddle_Storage_16 twiddler (.real_twiddles(real_twiddles), .imag_twiddles(imag_twiddles));
+		32 : Twiddle_Storage_32 twiddler (.real_twiddles(real_twiddles), .imag_twiddles(imag_twiddles));
+
     endcase
 endgenerate
 

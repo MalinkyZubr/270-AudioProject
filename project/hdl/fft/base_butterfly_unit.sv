@@ -1,6 +1,5 @@
 module FFT_Base_Butterfly #(
     parameter twiddle_size = 16, 
-    num_twiddles = 16,
     sample_size = 32,
     no_float_mult = 1000
 )
@@ -8,8 +7,8 @@ module FFT_Base_Butterfly #(
     input logic signed[sample_size - 1:0] even_buffer,
     input logic signed[sample_size - 1:0] odd_buffer,
 
-    input logic signed[twiddle_size * num_twiddles - 1:0] twiddles_real,
-    input logic signed[twiddle_size * num_twiddles - 1:0] twiddles_imag,
+    input logic signed[twiddle_size - 1:0] twiddles_real,
+    input logic signed[twiddle_size - 1:0] twiddles_imag,
 
     output logic signed[2 * sample_size - 1:0] output_real,
     output logic signed[2 * sample_size - 1:0] output_imag

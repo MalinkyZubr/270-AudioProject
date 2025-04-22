@@ -18,24 +18,15 @@ module FFT_Top #(
     logic signed[(buffer_size * twiddle_size / 2) - 1:0] twiddles_real;
     logic signed[(buffer_size * twiddle_size / 2) - 1:0] twiddles_imag;
 
-    Twiddle_Storage twiddles(
-        .real_twiddles(twiddles_real),
-        .imag_twiddles(twiddles_imag)
-    );
-
     FFT_N_Point #(.buffer_size(buffer_size),
         .twiddle_size(twiddle_size),
-        .num_twiddles(buffer_size / 2),
         .sample_size(sample_size),
         .no_float_mult(no_float_mult)
     ) inst_n_fft (
         .input_real(input_bitstream),
 
         .output_real(fft_real),
-        .output_imag(fft_imag),
-
-        .twiddles_real(twiddles_real),
-        .twiddles_imag(twiddles_imag)
+        .output_imag(fft_imag)
     );
 
     Partial_Magnitude_Computer #(

@@ -1,0 +1,1 @@
+6nlogn multiplications per fft, where n is num bins
