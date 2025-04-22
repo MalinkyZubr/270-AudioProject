@@ -2,7 +2,8 @@
 
 module InternalTester #(
     parameter i = 2,
-    sample_size = 32
+    sample_size = 32,
+    no_float_mult = 1000
 )
 ();
 
@@ -19,7 +20,7 @@ Twiddle_Coordinator #(.buffer_size(i), .twiddle_size(16)) twiddles(
     .imag_twiddles(twiddles_imag)
 );
 
-FFT_N_Point #(.sample_size(sample_size), .buffer_size(i), .twiddle_size(16), .no_float_mult(1000))fft(
+FFT_N_Point #(.sample_size(sample_size), .buffer_size(i), .twiddle_size(16), .no_float_mult(no_float_mult))fft(
     .input_real(input_bitstream),
     .output_real(output_real),
     .output_imag(output_imag)
@@ -35,7 +36,7 @@ initial begin
     for(int j = 0; j < i; j = j + 1) begin
         //$display("%f", 1000 * $sin(2 * j));
         //input_bitstream[j * 32 +: 32] = 10 * $sin(j * 15000) + 20 * $cos(j * 4000) + 10 * $cos(j * 5000) + 50 *$cos(j * 18000) + 40 * $cos(j * 400);
-        input_bitstream[j * sample_size +: sample_size] = 10 * $sin(j * 15000) + 90* $cos(j * 4000) + 1 * $cos(j * 5000) + 5 *$cos(j * 18000) + 3* $cos(j * 400);
+        input_bitstream[j * sample_size +: sample_size] = 10 * $sin(j * 15000) + 20* $cos(j * 4000) + 10 * $cos(j * 5000) + $cos(j * 18000) + $cos(j * 400);
     end
 
     #10;
@@ -54,6 +55,6 @@ endmodule
 
 module FFTTester();
 
-InternalTester #(.i(32), .sample_size(32)) test();
+InternalTester #(.i(16), .sample_size(32), .no_float_mult(256)) test();
 
 endmodule

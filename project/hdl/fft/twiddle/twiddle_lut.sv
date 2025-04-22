@@ -34,7 +34,6 @@ generate
 		4 : Twiddle_Storage_4 twiddler (.real_twiddles(real_twiddles), .imag_twiddles(imag_twiddles));
 		8 : Twiddle_Storage_8 twiddler (.real_twiddles(real_twiddles), .imag_twiddles(imag_twiddles));
 		16 : Twiddle_Storage_16 twiddler (.real_twiddles(real_twiddles), .imag_twiddles(imag_twiddles));
-		32 : Twiddle_Storage_32 twiddler (.real_twiddles(real_twiddles), .imag_twiddles(imag_twiddles));
 
     endcase
 endgenerate

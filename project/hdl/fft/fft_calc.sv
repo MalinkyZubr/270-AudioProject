@@ -34,6 +34,18 @@ logic signed[sample_size - 1:0] q_odd_real;
 logic signed[sample_size - 1:0] q_odd_imag;
 
 
+// always_comb begin
+//     if(is_base_case) begin
+//         even_input_real_buff = even_input_real * no_float_mult;
+//         even_input_imag_buff = even_input_imag * no_float_mult;
+//     end
+//     else begin
+//         even_input_real_buff = even_input_real;
+//         even_input_imag_buff = even_input_imag;
+//     end
+// end
+
+
 assign even_input_real_buff = even_input_real * no_float_mult;
 assign even_input_imag_buff = even_input_imag * no_float_mult;
     

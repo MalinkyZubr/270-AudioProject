@@ -25,40 +25,40 @@ module Twiddle_Storage_32 (
     output logic signed[16 * 16 - 1:0] imag_twiddles
 );
 
-assign real_twiddles[15:0] = 16'b0000000001100100;
-assign real_twiddles[31:16] = 16'b0000000001100011;
-assign real_twiddles[47:32] = 16'b0000000001011101;
-assign real_twiddles[63:48] = 16'b0000000001010100;
-assign real_twiddles[79:64] = 16'b0000000001000111;
-assign real_twiddles[95:80] = 16'b0000000000111000;
-assign real_twiddles[111:96] = 16'b0000000000100111;
-assign real_twiddles[127:112] = 16'b0000000000010100;
+assign real_twiddles[15:0] = 16'b0000000100000000;
+assign real_twiddles[31:16] = 16'b0000000011111100;
+assign real_twiddles[47:32] = 16'b0000000011101101;
+assign real_twiddles[63:48] = 16'b0000000011010101;
+assign real_twiddles[79:64] = 16'b0000000010110110;
+assign real_twiddles[95:80] = 16'b0000000010001111;
+assign real_twiddles[111:96] = 16'b0000000001100010;
+assign real_twiddles[127:112] = 16'b0000000000110010;
 assign real_twiddles[143:128] = 16'b0000000000000000;
-assign real_twiddles[159:144] = 16'b1111111111101101;
-assign real_twiddles[175:160] = 16'b1111111111011010;
-assign real_twiddles[191:176] = 16'b1111111111001001;
-assign real_twiddles[207:192] = 16'b1111111110111010;
-assign real_twiddles[223:208] = 16'b1111111110101101;
-assign real_twiddles[239:224] = 16'b1111111110100100;
-assign real_twiddles[255:240] = 16'b1111111110011110;
+assign real_twiddles[159:144] = 16'b1111111111001111;
+assign real_twiddles[175:160] = 16'b1111111110011111;
+assign real_twiddles[191:176] = 16'b1111111101110010;
+assign real_twiddles[207:192] = 16'b1111111101001011;
+assign real_twiddles[223:208] = 16'b1111111100101100;
+assign real_twiddles[239:224] = 16'b1111111100010100;
+assign real_twiddles[255:240] = 16'b1111111100000101;
  
 
 assign imag_twiddles[15:0] = 16'b0000000000000000;
-assign imag_twiddles[31:16] = 16'b1111111111101101;
-assign imag_twiddles[47:32] = 16'b1111111111011010;
-assign imag_twiddles[63:48] = 16'b1111111111001001;
-assign imag_twiddles[79:64] = 16'b1111111110111010;
-assign imag_twiddles[95:80] = 16'b1111111110101101;
-assign imag_twiddles[111:96] = 16'b1111111110100100;
-assign imag_twiddles[127:112] = 16'b1111111110011110;
-assign imag_twiddles[143:128] = 16'b1111111110011100;
-assign imag_twiddles[159:144] = 16'b1111111110011110;
-assign imag_twiddles[175:160] = 16'b1111111110100100;
-assign imag_twiddles[191:176] = 16'b1111111110101101;
-assign imag_twiddles[207:192] = 16'b1111111110111010;
-assign imag_twiddles[223:208] = 16'b1111111111001001;
-assign imag_twiddles[239:224] = 16'b1111111111011010;
-assign imag_twiddles[255:240] = 16'b1111111111101101;
+assign imag_twiddles[31:16] = 16'b1111111111001111;
+assign imag_twiddles[47:32] = 16'b1111111110011111;
+assign imag_twiddles[63:48] = 16'b1111111101110010;
+assign imag_twiddles[79:64] = 16'b1111111101001011;
+assign imag_twiddles[95:80] = 16'b1111111100101100;
+assign imag_twiddles[111:96] = 16'b1111111100010100;
+assign imag_twiddles[127:112] = 16'b1111111100000101;
+assign imag_twiddles[143:128] = 16'b1111111100000000;
+assign imag_twiddles[159:144] = 16'b1111111100000101;
+assign imag_twiddles[175:160] = 16'b1111111100010100;
+assign imag_twiddles[191:176] = 16'b1111111100101100;
+assign imag_twiddles[207:192] = 16'b1111111101001011;
+assign imag_twiddles[223:208] = 16'b1111111101110010;
+assign imag_twiddles[239:224] = 16'b1111111110011111;
+assign imag_twiddles[255:240] = 16'b1111111111001111;
 
 
 endmodule

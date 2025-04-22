@@ -24,7 +24,7 @@ def run_fft_n_point():
 
 def generate_test_fft(bin_size):
     j = np.asarray([x for x in range(bin_size)])
-    sined = (10 * np.sin(j * 15000) + 20 * np.cos(j * 4000) + 10 * np.cos(j * 5000) + np.cos(j * 18000) + np.cos(j * 400))
+    sined = 128 * (10 * np.sin(j * 15000) + 20 * np.cos(j * 4000) + 10 * np.cos(j * 5000) + np.cos(j * 18000) + np.cos(j * 400))
 
     fft = list(np.fft.fft(sined))
 
@@ -39,7 +39,9 @@ def plot_fft(complex_list: list):
 if __name__ == "__main__":
     complexes = run_fft_n_point()
     plot_fft(complexes)
-    #plot_fft(generate_test_fft(32))
+    plot_fft(generate_test_fft(16))
+
+    plt.legend(["Experimental", "Ideal"])
 
     plt.show()
 

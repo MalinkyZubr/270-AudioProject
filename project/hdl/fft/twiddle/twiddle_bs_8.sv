@@ -25,16 +25,16 @@ module Twiddle_Storage_8 (
     output logic signed[16 * 4 - 1:0] imag_twiddles
 );
 
-assign real_twiddles[15:0] = 16'b0000000001100100;
-assign real_twiddles[31:16] = 16'b0000000001000111;
+assign real_twiddles[15:0] = 16'b0000000100000000;
+assign real_twiddles[31:16] = 16'b0000000010110110;
 assign real_twiddles[47:32] = 16'b0000000000000000;
-assign real_twiddles[63:48] = 16'b1111111110111010;
+assign real_twiddles[63:48] = 16'b1111111101001011;
  
 
 assign imag_twiddles[15:0] = 16'b0000000000000000;
-assign imag_twiddles[31:16] = 16'b1111111110111010;
-assign imag_twiddles[47:32] = 16'b1111111110011100;
-assign imag_twiddles[63:48] = 16'b1111111110111010;
+assign imag_twiddles[31:16] = 16'b1111111101001011;
+assign imag_twiddles[47:32] = 16'b1111111100000000;
+assign imag_twiddles[63:48] = 16'b1111111101001011;
 
 
 endmodule
