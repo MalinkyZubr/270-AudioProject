@@ -95,7 +95,7 @@ int main() {
     init_spi();
     process_binary_file("audio_samples.bin");
     
-    }
+    
     
     return 0;
 }
