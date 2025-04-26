@@ -1,0 +1,18 @@
+# #######################################################################
+# Board:              iCE40 UltraPlus Evaluation/Breakout Board
+# Model-Nr.:          iCE40UP5K-B-EVN
+# FPGA:               iCE40UP5k
+# Package:            SG48
+# #######################################################################
+
+#
+# Onboard quartz oscillator:
+#  SiTime SiT1602AC-12-33E-12.000
+#
+set_io clk 35
+
+#
+# Onboard LED(s):
+#  Seoul Semiconductor SFT722N-S
+#
+set_io LED0   39

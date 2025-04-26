@@ -3,8 +3,8 @@
         "multiplier": 256,
         "buffsize": 16,
         "twiddle_file_abspath":"/home/malinkyzubr/Desktop/270-AudioProject/project/hdl/fft/twiddle/",
-        "twiddle_name_prefix":"twiddle_bs_",
-        "coordinator_filename":"twiddle_lut.sv"
+        "twiddle_name_prefix":"Twiddle_Storage_",
+        "coordinator_filename":"Twiddle_Coordinator.sv"
     },
     "sample_size":32
 }

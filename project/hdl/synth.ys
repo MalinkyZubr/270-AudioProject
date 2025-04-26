@@ -1,0 +1,10 @@
+read_verilog -sv ./blinky.sv
+read_verilog -sv ./fft/*.sv
+read_verilog -sv ./fft/twiddle/*.sv
+
+
+hierarchy -top blinky
+
+check
+
+synth_ice40 -top blinky -json blinky.json
